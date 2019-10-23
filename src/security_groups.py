@@ -16,3 +16,12 @@ for security_group in all_security_groups['SecurityGroups']:
 
 for groupname, description in security_groups_short.items():
     print(groupname,description)
+
+print('\x1b[6;30;42m' + '\n\n\n\nThis is a short output containing only group names, from and to ports\n\n\n\n\n' + '\x1b[0m')
+
+for security_group in all_security_groups['SecurityGroups']:
+    for rule in security_group['IpPermissions']:
+        try:
+            print('Group name: ' + security_group['GroupName'] + ', FromPort: '  + str(rule['FromPort']) + ', ToPort: ' + str(rule['ToPort']))
+        except KeyError:
+            continue
