@@ -37,14 +37,14 @@ f = open(csv_path,"a+")
 for security_group in all_security_groups['SecurityGroups']:
     for rule in security_group['IpPermissions']:
         try:
-            f.write('Group name: ' + security_group['GroupName'] + ', FromPort: '  + str(rule['FromPort']) + ', ToPort: ' + str(rule['ToPort']) + ',IPs: ' + str(rule['IpRanges']).replace(',',' ') + '\n')
+            f.write('Group name: ' + security_group['GroupName'] + ', FromPort: '  + str(rule['FromPort']) + ', ToPort: ' + str(rule['ToPort']) + ',IPs: ' + str(rule['IpRanges']).replace(',',' ') + ', UserIdGroupPairs ' + str(rule['UserIdGroupPairs']).replace(',',' ') + '\n')
         except KeyError as error:
             if (str(error)) == "'FromPort'":
                 try:
-                    f.write('Group name: ' + security_group['GroupName'] + ', FromPort: '  + 'All' + ', ToPort: ' + str(rule['ToPort']) + ',IPs:' + str(rule['IpRanges']).replace(',',' ') + '\n')
+                    f.write('Group name: ' + security_group['GroupName'] + ', FromPort: '  + 'All' + ', ToPort: ' + str(rule['ToPort']) + ',IPs:' + str(rule['IpRanges']).replace(',',' ') + ', UserIdGroupPairs ' +  str(rule['UserIdGroupPairs']).replace(',',' ') + '\n')
                 except KeyError as error2:
                     if (str(error2)) == "'ToPort'":
-                        f.write('Group name: ' + security_group['GroupName'] + ', FromPort: '  + 'All' + ', ToPort: ' + 'All' + ',IPs:' + str(rule['IpRanges']).replace(',',' ') + '\n')
+                        f.write('Group name: ' + security_group['GroupName'] + ', FromPort: '  + 'All' + ', ToPort: ' + 'All' + ',IPs:' + str(rule['IpRanges']).replace(',',' ') +  ', UserIdGroupPairs ' + str(rule['UserIdGroupPairs']).replace(',',' ') + '\n')
 
 f.close()
 
