@@ -38,8 +38,14 @@ for security_group in all_security_groups['SecurityGroups']:
     for rule in security_group['IpPermissions']:
         try:
             f.write('Group name: ' + security_group['GroupName'] + ', FromPort: '  + str(rule['FromPort']) + ', ToPort: ' + str(rule['ToPort']) + '\n')
-        except KeyError:
-            continue
+        except KeyError as error:
+            if (str(error)) == "'FromPort'":
+                try:
+                    f.write('Group name: ' + security_group['GroupName'] + ', FromPort: '  + 'All' + ', ToPort: ' + str(rule['ToPort']) + '\n')
+                except KeyError as error2:
+                    if (str(error2)) == "'ToPort'":
+                        f.write('Group name: ' + security_group['GroupName'] + ', FromPort: '  + 'All' + ', ToPort: ' + 'All' + '\n')
+
 f.close()
 
 print('\x1b[6;30;42m' + '\n\n\n\nUploading / updating google spreadsheet\n\n\n\n' + '\x1b[0m')
