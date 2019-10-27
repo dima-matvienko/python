@@ -4,7 +4,7 @@ import gspread
 import csv
 from oauth2client.service_account import ServiceAccountCredentials
 
-#Defining variables
+# Defining variables
 csv_path = "./security_groups.csv"
 scope = ['https://www.googleapis.com/auth/drive']
 credentials = "./creds.json"
@@ -17,8 +17,10 @@ security_groups = client.describe_security_groups()
 if os.path.exists(csv_path):
     os.remove(csv_path)
 
+# Writing data for IP-based sources
 with open(csv_path, 'w') as csv_file:
     csvwriter = csv.writer(csv_file, delimiter=',')
+    csvwriter.writerow(['1.GroupName', '2.GroupId', '3. Port Range', 'Source', '4. Description'])
     for security_group in security_groups['SecurityGroups']:
         for IpPermission in security_group['IpPermissions']:
             for IpRange in IpPermission['IpRanges']:
@@ -47,7 +49,7 @@ with open(csv_path, 'w') as csv_file:
                                 else:
                                     csvwriter.writerow([security_group['GroupName'], security_group['GroupId'], 'All', IpRange['CidrIp']])
 
-
+# Writing data for SG-based sources
 with open(csv_path, 'a') as csv_file:
         csvwriter = csv.writer(csv_file, delimiter=',')
         for security_group in security_groups['SecurityGroups']:
@@ -79,13 +81,18 @@ with open(csv_path, 'a') as csv_file:
                                         csvwriter.writerow([security_group['GroupName'], security_group['GroupId'], 'All', UserIdGroupPair['GroupId']])
 
 
-print('\x1b[6;30;42m' + '\nUploading / updating google spreadsheet\n' + '\x1b[0m')
-
 credentials = ServiceAccountCredentials.from_json_keyfile_name(credentials, scope)
 gc = gspread.authorize(credentials)
+
+# Sorting the output 
 content = open(csv_path, 'r').read()
 split_content = content.split('\n')
 sorted_content = "\n".join(sorted(split_content))
+
+# Importing result to Google spreadsheet
+
+print('\x1b[6;30;42m' + '\nUploading / updating google spreadsheet\n' + '\x1b[0m')
+
 gc.import_csv(spreadsheet_id, sorted_content)
 
 print('The link is here: https://docs.google.com/spreadsheets/d/' + spreadsheet_id)
