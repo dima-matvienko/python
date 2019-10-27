@@ -20,7 +20,7 @@ if os.path.exists(csv_path):
 # Writing data for IP-based sources
 with open(csv_path, 'w') as csv_file:
     csvwriter = csv.writer(csv_file, delimiter=',')
-    csvwriter.writerow(['1.GroupName', '2.GroupId', '3. Port Range', 'Source', '4. Description'])
+    csvwriter.writerow(['1.Group Name', '2.Group Id', '3. Port Range', '4. Source', '5. Description'])
     for security_group in security_groups['SecurityGroups']:
         for IpPermission in security_group['IpPermissions']:
             for IpRange in IpPermission['IpRanges']:
